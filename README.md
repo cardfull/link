@@ -14,7 +14,7 @@
         <li><a href="https://drive.google.com/uc?export=download&id=138qm-a6WoalvrMLff3GhYV5BlESVHaYn" download>3 - Dns Changer</a></li>
         <li><a href="https://drive.google.com/uc?export=download&id=1LBvQLUiBBoVljICfVOatjQLmJgrnswTh" download>4 - Loja Painel</a></li>
         <li><a href="https://drive.google.com/uc?export=download&id=1oE6GUvEvAk301OZCwxF3MyPmgdZ4eLji" download>5 - Loja P2</a></li>
-        <li><a href="https://drive.google.com/uc?export=download&id=1_sfzo16QtVbkG6uwBkGO8h1XvawvN2LP" download>6 - Smarters Pro</a></li>
+        <li><a href="https://drive.google.com/uc?export=download&id=1Midxxpti1y1m4LrKnuV7bSKjqozBPX3Q" download>6 - Smarters Pro</a></li>
     </ul>
 </body>
 </html>
