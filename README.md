@@ -19,22 +19,20 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            width: 100%; /* Importante para responsividade */
+            padding: 20px 15px;
         }
 
         .right-links h2 {
             text-align: center;
             color: #333;
             margin-bottom: 30px;
-            word-break: break-word;
+            font-size: 1.8rem;
         }
 
         ul {
             list-style: none;
             padding: 0;
             margin: 0;
-            max-width: 100%;
         }
 
         li {
@@ -44,8 +42,6 @@
             margin-bottom: 20px;
             padding: 20px;
             transition: transform 0.2s;
-            max-width: 100%;
-            word-break: break-word; /* evita overflow de texto */
         }
 
         li:hover {
@@ -59,13 +55,12 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: #444;
-            flex-wrap: wrap; /* permite quebrar linha em telas pequenas */
-            word-break: break-word;
+            font-size: 1.1rem;
         }
 
         .status-icon {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background-color: #4caf50;
             border-radius: 50%;
             flex-shrink: 0;
@@ -74,20 +69,22 @@
         .item-actions {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .item-actions a {
             text-decoration: none;
             background-color: #007bff;
             color: white;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             border-radius: 5px;
             transition: background-color 0.3s;
-            width: 100%; /* botões sempre 100% largura */
-            box-sizing: border-box;
-            word-break: break-word;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-block;
+            width: 150px;
+            user-select: none;
         }
 
         .item-actions a:hover {
@@ -97,7 +94,7 @@
         .download-count {
             font-size: 14px;
             color: #666;
-            word-break: break-word;
+            user-select: none;
         }
 
         .footer {
@@ -106,22 +103,39 @@
             color: #888;
             font-size: 14px;
             margin-top: 40px;
-            word-break: break-word;
         }
 
+        /* Ajustes para telas menores */
         @media (max-width: 600px) {
             .container {
-                padding: 10px;
+                padding: 15px 10px;
+            }
+
+            .right-links h2 {
+                font-size: 1.5rem;
             }
 
             .item-header {
-                font-size: 16px;
+                font-size: 1rem;
             }
 
-            /* Se quiser, pode reduzir o padding do botão no mobile */
+            .status-icon {
+                width: 12px;
+                height: 12px;
+            }
+
+            .item-actions {
+                gap: 8px;
+            }
+
             .item-actions a {
-                padding: 12px;
-                font-size: 16px;
+                width: 100% !important;
+                font-size: 1.1rem;
+                padding: 14px 0;
+            }
+
+            .download-count {
+                font-size: 13px;
             }
         }
     </style>
@@ -151,7 +165,66 @@
                         <span id="downloadCount2" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
-                <!-- demais itens seguem o mesmo padrão -->
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 3 - Dns Changer
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=138qm-a6WoalvrMLff3GhYV5BlESVHaYn"
+                           target="_blank" download onclick="incrementDownloadCount(3)">Baixar</a>
+                        <span id="downloadCount3" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 4 - Loja Painel
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=1LBvQLUiBBoVljICfVOatjQLmJgrnswTh"
+                           target="_blank" download onclick="incrementDownloadCount(4)">Baixar</a>
+                        <span id="downloadCount4" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 5 - Loja P2
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=1oE6GUvEvAk301OZCwxF3MyPmgdZ4eLji"
+                           target="_blank" download onclick="incrementDownloadCount(5)">Baixar</a>
+                        <span id="downloadCount5" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 6 - Smarters Pro
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=1Midxxpti1y1m4LrKnuV7bSKjqozBPX3Q"
+                           target="_blank" download onclick="incrementDownloadCount(6)">Baixar</a>
+                        <span id="downloadCount6" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 7 - Cine Magic Plus (Windows)
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=1C01bbDO6mgTTgrEa9ABQH3BwiNiq_J2w"
+                           target="_blank" download onclick="incrementDownloadCount(7)">Baixar</a>
+                        <span id="downloadCount7" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 8 - Cine Magic Plus (MacOS)
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=1mnUGmXY69JAaT_TlY1ndgPHqzbXoF5My"
+                           target="_blank" download onclick="incrementDownloadCount(8)">Baixar</a>
+                        <span id="downloadCount8" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -161,6 +234,26 @@
     </footer>
 
     <script>
+        function updateVisitCount() {
+            let visitCount = localStorage.getItem('visitCount') || 0;
+            visitCount = parseInt(visitCount) + 1;
+            localStorage.setItem('visitCount', visitCount);
+            const visitDisplay = document.getElementById('visitCount');
+            if (visitDisplay) visitDisplay.textContent = visitCount;
+        }
+
+        async function getUserIp() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                const ipDisplay = document.getElementById('userIp');
+                if (ipDisplay) ipDisplay.textContent = data.ip;
+            } catch {
+                const ipDisplay = document.getElementById('userIp');
+                if (ipDisplay) ipDisplay.textContent = 'Erro ao obter IP';
+            }
+        }
+
         function incrementDownloadCount(fileId) {
             let downloadCount = localStorage.getItem(`downloadCount${fileId}`) || 0;
             downloadCount = parseInt(downloadCount) + 1;
@@ -169,6 +262,8 @@
         }
 
         window.onload = function () {
+            updateVisitCount();
+            getUserIp();
             for (let i = 1; i <= 8; i++) {
                 let count = localStorage.getItem(`downloadCount${i}`) || 0;
                 document.getElementById(`downloadCount${i}`).textContent = `Downloads: ${count}`;
