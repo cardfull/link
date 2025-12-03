@@ -105,7 +105,7 @@
             margin-top: 40px;
         }
 
-        /* Ajustes para telas menores */
+        /* Responsividade */
         @media (max-width: 600px) {
             .container {
                 padding: 15px 10px;
@@ -117,15 +117,6 @@
 
             .item-header {
                 font-size: 1rem;
-            }
-
-            .status-icon {
-                width: 12px;
-                height: 12px;
-            }
-
-            .item-actions {
-                gap: 8px;
             }
 
             .item-actions a {
@@ -140,11 +131,14 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="right-links links">
             <h2>Arquivos para Download</h2>
             <ul>
+
+                <!-- 1 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 1 - Club Lite
@@ -155,6 +149,8 @@
                         <span id="downloadCount1" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 2 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 2 - Club Smart
@@ -165,6 +161,8 @@
                         <span id="downloadCount2" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 3 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 3 - Dns Changer
@@ -175,6 +173,8 @@
                         <span id="downloadCount3" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 4 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 4 - Loja Painel
@@ -185,6 +185,8 @@
                         <span id="downloadCount4" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 5 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 5 - Loja P2
@@ -195,6 +197,8 @@
                         <span id="downloadCount5" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 6 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 6 - Smarters Pro
@@ -205,6 +209,8 @@
                         <span id="downloadCount6" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 7 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 7 - Cine Magic Plus (Windows)
@@ -215,6 +221,8 @@
                         <span id="downloadCount7" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 8 -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 8 - Cine Magic Plus (MacOS)
@@ -229,14 +237,15 @@
                 <!-- 9 - Free VPN -->
                 <li>
                     <div class="item-header">
-                        <span class="status-icon"></span> 9 - Pre VPN
+                        <span class="status-icon"></span> 9 - Free VPN
                     </div>
                     <div class="item-actions">
-                        <a href="https://drive.google.com/uc?export=download&id=1t09GsI6GBY-5rXquGzYDACvLBFieco48"
+                        <a href="https://drive.google.com/uc?export=download&id=1GUUDLzADjsqPA0bvSSCXr_e08TvBQ24W"
                            target="_blank" download onclick="incrementDownloadCount(9)">Baixar</a>
                         <span id="downloadCount9" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
             </ul>
         </div>
     </div>
@@ -276,13 +285,12 @@
         window.onload = function () {
             updateVisitCount();
             getUserIp();
-            // Agora vai até 9
+
+            // Atualiza contadores até 9
             for (let i = 1; i <= 9; i++) {
                 let count = localStorage.getItem(`downloadCount${i}`) || 0;
                 const el = document.getElementById(`downloadCount${i}`);
-                if (el) {
-                    el.textContent = `Downloads: ${count}`;
-                }
+                if (el) el.textContent = `Downloads: ${count}`;
             }
         };
     </script>
