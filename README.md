@@ -105,7 +105,6 @@
             margin-top: 40px;
         }
 
-        /* Responsividade */
         @media (max-width: 600px) {
             .container {
                 padding: 15px 10px;
@@ -234,13 +233,13 @@
                     </div>
                 </li>
 
-                <!-- 9 - Free VPN -->
+                <!-- 9 - Free VPN (ATUALIZADA) -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 9 - Free VPN
                     </div>
                     <div class="item-actions">
-                        <a href="https://drive.google.com/uc?export=download&id=1GUUDLzADjsqPA0bvSSCXr_e08TvBQ24W"
+                        <a href="https://drive.google.com/uc?export=download&id=1NCInAchyvYLdJ8W4gYRhhCY53B0dXxcS"
                            target="_blank" download onclick="incrementDownloadCount(9)">Baixar</a>
                         <span id="downloadCount9" class="download-count">Downloads: 0</span>
                     </div>
@@ -286,7 +285,6 @@
             updateVisitCount();
             getUserIp();
 
-            // Atualiza contadores até 9
             for (let i = 1; i <= 9; i++) {
                 let count = localStorage.getItem(`downloadCount${i}`) || 0;
                 const el = document.getElementById(`downloadCount${i}`);
