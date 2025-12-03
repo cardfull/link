@@ -225,6 +225,18 @@
                         <span id="downloadCount8" class="download-count">Downloads: 0</span>
                     </div>
                 </li>
+
+                <!-- 9 - Pre VPN -->
+                <li>
+                    <div class="item-header">
+                        <span class="status-icon"></span> 9 - Pre VPN
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://drive.google.com/uc?export=download&id=1t09GsI6GBY-5rXquGzYDACvLBFieco48"
+                           target="_blank" download onclick="incrementDownloadCount(9)">Baixar</a>
+                        <span id="downloadCount9" class="download-count">Downloads: 0</span>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -264,9 +276,13 @@
         window.onload = function () {
             updateVisitCount();
             getUserIp();
-            for (let i = 1; i <= 8; i++) {
+            // Agora vai até 9
+            for (let i = 1; i <= 9; i++) {
                 let count = localStorage.getItem(`downloadCount${i}`) || 0;
-                document.getElementById(`downloadCount${i}`).textContent = `Downloads: ${count}`;
+                const el = document.getElementById(`downloadCount${i}`);
+                if (el) {
+                    el.textContent = `Downloads: ${count}`;
+                }
             }
         };
     </script>
