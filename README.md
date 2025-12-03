@@ -226,7 +226,7 @@
                     </div>
                 </li>
 
-                <!-- 9 - Pre VPN -->
+                <!-- 9 - Free VPN -->
                 <li>
                     <div class="item-header">
                         <span class="status-icon"></span> 9 - Pre VPN
