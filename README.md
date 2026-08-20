@@ -413,10 +413,16 @@
 
     .footer svg { width: 20px; height: 20px; color: var(--green); }
 
-    /* TV Box / teclado / acessibilidade: foco grande e muito visível */
-    .focusable:focus { outline: none; }
+    /* TV Box / teclado / acessibilidade: foco grande e muito visível.
+       Regras separadas para funcionar também em Chromes/WebViews antigos. */
+    .focusable:focus {
+      position: relative;
+      z-index: 2;
+      outline: 4px solid rgba(126, 96, 255, .94) !important;
+      outline-offset: 4px;
+      box-shadow: 0 0 0 8px rgba(72, 131, 255, .18), 0 0 34px rgba(115, 78, 255, .55) !important;
+    }
 
-    .focusable:focus-visible,
     .remote-focus {
       position: relative;
       z-index: 2;
@@ -531,7 +537,7 @@
 
       <!-- 1 - CLASSIC SERVER -->
       <article class="server" data-server="1">
-        <button class="server-toggle focusable" type="button" aria-expanded="false" aria-controls="server-1-content">
+        <button class="server-toggle focusable" type="button" onclick="return centralToggleServer(this);" aria-expanded="false" aria-controls="server-1-content">
           <span class="server-number">1</span>
           <span class="server-title">Classic Server</span>
           <span class="chevron" aria-hidden="true"></span>
@@ -615,7 +621,7 @@
 
       <!-- 2 - P2SERVER -->
       <article class="server" data-server="2">
-        <button class="server-toggle focusable" type="button" aria-expanded="false" aria-controls="server-2-content">
+        <button class="server-toggle focusable" type="button" onclick="return centralToggleServer(this);" aria-expanded="false" aria-controls="server-2-content">
           <span class="server-number">2</span><span class="server-title">P2Server Server</span><span class="chevron" aria-hidden="true"></span>
         </button>
         <div class="server-content" id="server-2-content">
@@ -655,7 +661,7 @@
 
       <!-- 3 - UNIPLAY -->
       <article class="server" data-server="3">
-        <button class="server-toggle focusable" type="button" aria-expanded="false" aria-controls="server-3-content">
+        <button class="server-toggle focusable" type="button" onclick="return centralToggleServer(this);" aria-expanded="false" aria-controls="server-3-content">
           <span class="server-number">3</span><span class="server-title">UniPlay</span><span class="chevron" aria-hidden="true"></span>
         </button>
         <div class="server-content" id="server-3-content">
@@ -685,7 +691,7 @@
 
       <!-- 4 - CLUB MEXICANO -->
       <article class="server" data-server="4">
-        <button class="server-toggle focusable" type="button" aria-expanded="false" aria-controls="server-4-content">
+        <button class="server-toggle focusable" type="button" onclick="return centralToggleServer(this);" aria-expanded="false" aria-controls="server-4-content">
           <span class="server-number">4</span><span class="server-title">Club Mexicano</span><span class="chevron" aria-hidden="true"></span>
         </button>
         <div class="server-content" id="server-4-content">
@@ -705,7 +711,7 @@
 
       <!-- 5 - APPS DIVERSOS -->
       <article class="server" data-server="5">
-        <button class="server-toggle focusable" type="button" aria-expanded="false" aria-controls="server-5-content">
+        <button class="server-toggle focusable" type="button" onclick="return centralToggleServer(this);" aria-expanded="false" aria-controls="server-5-content">
           <span class="server-number">5</span><span class="server-title">Apps Diversos</span><span class="chevron" aria-hidden="true"></span>
         </button>
         <div class="server-content" id="server-5-content">
@@ -763,182 +769,306 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    (() => {
-      const servers = [...document.querySelectorAll('.server')];
-      const toast = document.getElementById('toast');
-      let toastTimer;
+    /*
+      Compatibilidade TV Box:
+      - JavaScript ES5 (sem optional chaining, async/await, arrow function, spread etc.)
+      - suporte a keyCode de controles Android/TV (DPAD 19/20/21/22/23 e Enter 66)
+      - clique normal continua funcionando em mouse e touch
+    */
 
-      function visibleFocusable() {
-        return [...document.querySelectorAll('.focusable')].filter((el) => {
-          if (el.disabled) return false;
-          if (el.offsetParent === null) return false;
-          return true;
-        });
+    var centralServers = [];
+    var centralToast = null;
+    var centralToastTimer = null;
+
+    function centralHasClass(el, name) {
+      if (!el) return false;
+      if (el.classList) return el.classList.contains(name);
+      return new RegExp('(^|\\s)' + name + '(\\s|$)').test(el.className || '');
+    }
+
+    function centralAddClass(el, name) {
+      if (!el || centralHasClass(el, name)) return;
+      if (el.classList) el.classList.add(name);
+      else el.className = (el.className ? el.className + ' ' : '') + name;
+    }
+
+    function centralRemoveClass(el, name) {
+      if (!el) return;
+      if (el.classList) el.classList.remove(name);
+      else el.className = (el.className || '').replace(new RegExp('(^|\\s)' + name + '(?=\\s|$)', 'g'), ' ').replace(/^\\s+|\\s+$/g, '');
+    }
+
+    function centralClosestByClass(el, className) {
+      while (el && el !== document) {
+        if (centralHasClass(el, className)) return el;
+        el = el.parentNode;
+      }
+      return null;
+    }
+
+    function centralAddEvent(el, type, handler) {
+      if (!el) return;
+      if (el.addEventListener) el.addEventListener(type, handler, false);
+      else if (el.attachEvent) el.attachEvent('on' + type, handler);
+    }
+
+    function centralShowToast(message) {
+      if (!centralToast) return;
+      if (centralToastTimer) window.clearTimeout(centralToastTimer);
+      centralToast.innerHTML = message;
+      centralAddClass(centralToast, 'show');
+      centralToastTimer = window.setTimeout(function () {
+        centralRemoveClass(centralToast, 'show');
+      }, 1800);
+    }
+
+    function centralCloseServer(server) {
+      if (!server) return;
+      centralRemoveClass(server, 'open');
+      var button = server.querySelector ? server.querySelector('.server-toggle') : null;
+      if (button) button.setAttribute('aria-expanded', 'false');
+    }
+
+    function centralOpenServer(server, focusFirstInside) {
+      if (!server) return;
+      var i;
+      for (i = 0; i < centralServers.length; i++) {
+        if (centralServers[i] !== server) centralCloseServer(centralServers[i]);
+      }
+      centralAddClass(server, 'open');
+      var button = server.querySelector ? server.querySelector('.server-toggle') : null;
+      if (button) button.setAttribute('aria-expanded', 'true');
+
+      if (focusFirstInside) {
+        window.setTimeout(function () {
+          var first = server.querySelector ? server.querySelector('.server-content .focusable') : null;
+          if (first) centralFocusElement(first);
+        }, 30);
+      }
+    }
+
+    function centralToggleServer(button) {
+      var server = centralClosestByClass(button, 'server');
+      if (!server) return false;
+      if (centralHasClass(server, 'open')) centralCloseServer(server);
+      else centralOpenServer(server, false);
+      return false;
+    }
+
+    function centralIsVisible(el) {
+      if (!el || el.disabled) return false;
+      if (el.offsetWidth === 0 && el.offsetHeight === 0) return false;
+      return true;
+    }
+
+    function centralVisibleFocusable() {
+      var nodes = document.querySelectorAll ? document.querySelectorAll('.focusable') : [];
+      var result = [];
+      var i;
+      for (i = 0; i < nodes.length; i++) {
+        if (centralIsVisible(nodes[i])) result.push(nodes[i]);
+      }
+      return result;
+    }
+
+    function centralClearRemoteFocus(except) {
+      var nodes = document.querySelectorAll ? document.querySelectorAll('.remote-focus') : [];
+      var i;
+      for (i = 0; i < nodes.length; i++) {
+        if (nodes[i] !== except) centralRemoveClass(nodes[i], 'remote-focus');
+      }
+    }
+
+    function centralFocusElement(el) {
+      if (!el) return;
+      centralClearRemoteFocus(el);
+      centralAddClass(el, 'remote-focus');
+      try { el.focus(); } catch (e) {}
+      try { el.scrollIntoView(false); } catch (e2) {}
+    }
+
+    function centralCopyText(code) {
+      var ok = false;
+      var input = document.createElement('textarea');
+      input.value = code;
+      input.setAttribute('readonly', 'readonly');
+      input.style.position = 'fixed';
+      input.style.left = '-9999px';
+      input.style.top = '0';
+      document.body.appendChild(input);
+      try {
+        input.focus();
+        input.select();
+        ok = document.execCommand ? document.execCommand('copy') : false;
+      } catch (e) {}
+      document.body.removeChild(input);
+      centralShowToast(ok ? ('Código ' + code + ' copiado.') : ('Código: ' + code));
+    }
+
+    function centralPrepareDownload(link, event) {
+      if (!link) return false;
+      if (event && (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)) return true;
+      if (event && event.preventDefault) event.preventDefault();
+      var card = centralClosestByClass(link, 'app-card');
+      var url = link.getAttribute('href');
+      if (card) centralAddClass(card, 'preparing');
+      centralShowToast('Preparando o download...');
+      window.setTimeout(function () {
+        window.location.href = url;
+      }, 650);
+      return false;
+    }
+
+    function centralKeyInfo(event) {
+      var e = event || window.event;
+      var code = e.keyCode || e.which || 0;
+      var key = e.key || '';
+      return { e: e, code: code, key: key };
+    }
+
+    function centralPrevent(e) {
+      if (!e) return;
+      if (e.preventDefault) e.preventDefault();
+      e.returnValue = false;
+    }
+
+    function centralHandleKeydown(event) {
+      var info = centralKeyInfo(event);
+      var e = info.e;
+      var code = info.code;
+      var key = info.key;
+      var active = document.activeElement;
+      var focusables;
+      var index;
+      var i;
+
+      var isUp = key === 'ArrowUp' || code === 38 || code === 19;
+      var isDown = key === 'ArrowDown' || code === 40 || code === 20;
+      var isLeft = key === 'ArrowLeft' || code === 37 || code === 21;
+      var isRight = key === 'ArrowRight' || code === 39 || code === 22;
+      var isOk = key === 'Enter' || key === ' ' || key === 'Spacebar' || code === 13 || code === 23 || code === 66 || code === 32;
+      var isBack = key === 'Escape' || key === 'Backspace' || key === 'BrowserBack' || code === 27 || code === 8 || code === 4;
+
+      if (isUp || isDown) {
+        centralPrevent(e);
+        focusables = centralVisibleFocusable();
+        if (!focusables.length) return false;
+        index = -1;
+        for (i = 0; i < focusables.length; i++) {
+          if (focusables[i] === active) { index = i; break; }
+        }
+        if (index < 0) index = isDown ? -1 : 0;
+        index = isDown ? (index + 1) % focusables.length : (index - 1 + focusables.length) % focusables.length;
+        centralFocusElement(focusables[index]);
+        return false;
       }
 
-      function showToast(message) {
-        clearTimeout(toastTimer);
-        toast.textContent = message;
-        toast.classList.add('show');
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+      if (isOk) {
+        if (active && centralHasClass(active, 'focusable')) {
+          centralPrevent(e);
+          try { active.click(); } catch (clickError) {
+            if (centralHasClass(active, 'server-toggle')) centralToggleServer(active);
+          }
+          return false;
+        }
       }
 
-      function closeServer(server) {
-        server.classList.remove('open');
-        const button = server.querySelector('.server-toggle');
-        button.setAttribute('aria-expanded', 'false');
+      if (isRight) {
+        var toggle = centralClosestByClass(active, 'server-toggle');
+        if (toggle) {
+          centralPrevent(e);
+          var server = centralClosestByClass(toggle, 'server');
+          if (!centralHasClass(server, 'open')) centralOpenServer(server, true);
+          else {
+            var first = server.querySelector ? server.querySelector('.server-content .focusable') : null;
+            if (first) centralFocusElement(first);
+          }
+          return false;
+        }
       }
 
-      function openServer(server, focusFirstInside = false) {
-        servers.forEach((item) => {
-          if (item !== server) closeServer(item);
-        });
-        server.classList.add('open');
-        const button = server.querySelector('.server-toggle');
-        button.setAttribute('aria-expanded', 'true');
+      if (isLeft) {
+        var currentServer = centralClosestByClass(active, 'server');
+        if (currentServer && centralHasClass(currentServer, 'open')) {
+          centralPrevent(e);
+          var currentToggle = currentServer.querySelector ? currentServer.querySelector('.server-toggle') : null;
+          if (active !== currentToggle) centralFocusElement(currentToggle);
+          else centralCloseServer(currentServer);
+          return false;
+        }
+      }
 
-        if (focusFirstInside) {
-          requestAnimationFrame(() => {
-            const first = server.querySelector('.server-content .focusable');
-            if (first) focusElement(first);
+      if (isBack) {
+        var openServer = document.querySelector ? document.querySelector('.server.open') : null;
+        if (openServer) {
+          centralPrevent(e);
+          var openToggle = openServer.querySelector ? openServer.querySelector('.server-toggle') : null;
+          centralCloseServer(openServer);
+          if (openToggle) centralFocusElement(openToggle);
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function centralInit() {
+      var serverNodes = document.querySelectorAll ? document.querySelectorAll('.server') : [];
+      var i;
+      centralServers = [];
+      for (i = 0; i < serverNodes.length; i++) {
+        centralServers.push(serverNodes[i]);
+        centralCloseServer(serverNodes[i]);
+      }
+
+      centralToast = document.getElementById('toast');
+
+      var copyButtons = document.querySelectorAll ? document.querySelectorAll('[data-copy]') : [];
+      for (i = 0; i < copyButtons.length; i++) {
+        (function (button) {
+          centralAddEvent(button, 'click', function () {
+            centralCopyText(button.getAttribute('data-copy'));
           });
-        }
+        })(copyButtons[i]);
       }
 
-      function toggleServer(server) {
-        if (server.classList.contains('open')) {
-          closeServer(server);
-          localStorage.removeItem('centralDownloadsOpenServer');
-        } else {
-          openServer(server);
-        }
-      }
-
-      function focusElement(el) {
-        if (!el) return;
-        document.querySelectorAll('.remote-focus').forEach((item) => item.classList.remove('remote-focus'));
-        el.classList.add('remote-focus');
-        el.focus({ preventScroll: true });
-        el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-      }
-
-      // Accordion: abre um servidor e fecha todos os outros.
-      servers.forEach((server) => {
-        const toggle = server.querySelector('.server-toggle');
-        toggle.addEventListener('click', () => toggleServer(server));
-      });
-
-      // Copiar código Downloader com toque, mouse ou OK/Enter.
-      document.querySelectorAll('[data-copy]').forEach((button) => {
-        button.addEventListener('click', async () => {
-          const code = button.dataset.copy;
-          try {
-            await navigator.clipboard.writeText(code);
-            showToast(`Código ${code} copiado.`);
-          } catch {
-            const input = document.createElement('textarea');
-            input.value = code;
-            input.style.position = 'fixed';
-            input.style.opacity = '0';
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            input.remove();
-            showToast(`Código ${code} copiado.`);
-          }
-        });
-      });
-
-      // Barra de preparação honesta: não simula percentual/MB do Google Drive.
-      document.querySelectorAll('[data-download]').forEach((link) => {
-        link.addEventListener('click', (event) => {
-          if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-          event.preventDefault();
-          const card = link.closest('.app-card');
-          const url = link.href;
-          card.classList.add('preparing');
-          showToast('Preparando o download...');
-          setTimeout(() => {
-            window.location.href = url;
-          }, 850);
-        });
-      });
-
-      // Navegação para controles de TV Box e teclado.
-      document.addEventListener('keydown', (event) => {
-        const key = event.key;
-        const active = document.activeElement;
-        const focusables = visibleFocusable();
-        let index = focusables.indexOf(active);
-
-        if (['ArrowDown', 'ArrowUp'].includes(key)) {
-          event.preventDefault();
-          if (!focusables.length) return;
-          if (index < 0) index = 0;
-          else index = key === 'ArrowDown'
-            ? (index + 1) % focusables.length
-            : (index - 1 + focusables.length) % focusables.length;
-          focusElement(focusables[index]);
-          return;
-        }
-
-        if (key === 'ArrowRight') {
-          const toggle = active.closest?.('.server-toggle');
-          if (toggle) {
-            event.preventDefault();
-            const server = toggle.closest('.server');
-            if (!server.classList.contains('open')) openServer(server, true);
-            else {
-              const first = server.querySelector('.server-content .focusable');
-              if (first) focusElement(first);
-            }
-          }
-          return;
-        }
-
-        if (key === 'ArrowLeft') {
-          const server = active.closest?.('.server');
-          if (server && server.classList.contains('open')) {
-            const toggle = server.querySelector('.server-toggle');
-            if (active !== toggle) {
-              event.preventDefault();
-              focusElement(toggle);
-            } else {
-              event.preventDefault();
-              closeServer(server);
-              localStorage.removeItem('centralDownloadsOpenServer');
-            }
-          }
-          return;
-        }
-
-        // Alguns controles enviam Backspace como botão voltar.
-        if (key === 'Escape' || key === 'Backspace' || key === 'BrowserBack') {
-          const open = document.querySelector('.server.open');
-          if (open) {
-            event.preventDefault();
-            closeServer(open);
-            localStorage.removeItem('centralDownloadsOpenServer');
-            focusElement(open.querySelector('.server-toggle'));
-          }
-        }
-      });
-
-      document.addEventListener('focusin', (event) => {
-        if (event.target.classList?.contains('focusable')) {
-          document.querySelectorAll('.remote-focus').forEach((item) => {
-            if (item !== event.target) item.classList.remove('remote-focus');
+      var links = document.querySelectorAll ? document.querySelectorAll('[data-download]') : [];
+      for (i = 0; i < links.length; i++) {
+        (function (link) {
+          centralAddEvent(link, 'click', function (ev) {
+            return centralPrepareDownload(link, ev || window.event);
           });
-          event.target.classList.add('remote-focus');
+        })(links[i]);
+      }
+
+      centralAddEvent(document, 'keydown', centralHandleKeydown);
+
+      centralAddEvent(document, 'focusin', function (ev) {
+        var e = ev || window.event;
+        var target = e.target || e.srcElement;
+        if (target && centralHasClass(target, 'focusable')) {
+          centralClearRemoteFocus(target);
+          centralAddClass(target, 'remote-focus');
         }
       });
 
-      document.addEventListener('pointerdown', () => {
-        document.querySelectorAll('.remote-focus').forEach((item) => item.classList.remove('remote-focus'));
-      }, { passive: true });
+      // Em aparelhos que não suportam Pointer Events, mousedown/touchstart continuam funcionando.
+      centralAddEvent(document, 'mousedown', function () { centralClearRemoteFocus(null); });
+      centralAddEvent(document, 'touchstart', function () { centralClearRemoteFocus(null); });
 
-      // A página sempre inicia com todos os servidores fechados.
-    })();
+      // Inicia com tudo fechado e com foco no primeiro servidor no TV Box/teclado.
+      window.setTimeout(function () {
+        var firstToggle = document.querySelector ? document.querySelector('.server-toggle') : null;
+        if (firstToggle && !('ontouchstart' in window)) centralFocusElement(firstToggle);
+      }, 100);
+    }
+
+    if (document.readyState === 'loading') centralAddEvent(document, 'DOMContentLoaded', centralInit);
+    else centralInit();
+
+    centralAddEvent(window, 'pageshow', function () {
+      var i;
+      for (i = 0; i < centralServers.length; i++) centralCloseServer(centralServers[i]);
+    });
   </script>
 </body>
 </html>
