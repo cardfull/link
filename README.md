@@ -530,8 +530,8 @@
     <section class="servers" id="servers" aria-label="Servidores e aplicativos">
 
       <!-- 1 - CLASSIC SERVER -->
-      <article class="server open" data-server="1">
-        <button class="server-toggle focusable" type="button" aria-expanded="true" aria-controls="server-1-content">
+      <article class="server" data-server="1">
+        <button class="server-toggle focusable" type="button" aria-expanded="false" aria-controls="server-1-content">
           <span class="server-number">1</span>
           <span class="server-title">Classic Server</span>
           <span class="chevron" aria-hidden="true"></span>
@@ -796,7 +796,6 @@
         server.classList.add('open');
         const button = server.querySelector('.server-toggle');
         button.setAttribute('aria-expanded', 'true');
-        localStorage.setItem('centralDownloadsOpenServer', server.dataset.server);
 
         if (focusFirstInside) {
           requestAnimationFrame(() => {
@@ -938,12 +937,7 @@
         document.querySelectorAll('.remote-focus').forEach((item) => item.classList.remove('remote-focus'));
       }, { passive: true });
 
-      // Mantém o menu em que o usuário estava ao voltar do Google Drive.
-      const savedServer = localStorage.getItem('centralDownloadsOpenServer');
-      if (savedServer) {
-        const saved = document.querySelector(`.server[data-server="${savedServer}"]`);
-        if (saved) openServer(saved);
-      }
+      // A página sempre inicia com todos os servidores fechados.
     })();
   </script>
 </body>
