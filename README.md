@@ -625,6 +625,9 @@
                 <p class="app-desc">Aplicativo IPTV mais moderno do mercado.</p>
                 <div class="meta-row">
                   <span class="platform">Android</span>
+                  <button class="downloader-copy focusable" type="button" data-copy="2077595" aria-label="Copiar código Downloader 2077595">
+                    Downloader: <strong>2077595</strong>
+                  </button>
                   <span class="platform">Versão 0.9.120</span>
                   <span class="platform">2.1 MB</span>
                 </div>
