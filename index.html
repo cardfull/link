@@ -1027,17 +1027,35 @@
       centralShowToast(ok ? ('Código ' + code + ' copiado.') : ('Código: ' + code));
     }
 
+    function centralResetDownloads() {
+      var cards = document.querySelectorAll ? document.querySelectorAll('.app-card.preparing') : [];
+      var i;
+      for (i = 0; i < cards.length; i++) {
+        centralRemoveClass(cards[i], 'preparing');
+      }
+    }
+
     function centralPrepareDownload(link, event) {
       if (!link) return false;
       if (event && (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)) return true;
       if (event && event.preventDefault) event.preventDefault();
+
       var card = centralClosestByClass(link, 'app-card');
       var url = link.getAttribute('href');
+
+      centralResetDownloads();
       if (card) centralAddClass(card, 'preparing');
       centralShowToast('Preparando o download...');
+
+      /* Segurança visual: nunca deixa o estado "Preparando..." preso na tela. */
+      window.setTimeout(function () {
+        centralResetDownloads();
+      }, 3000);
+
       window.setTimeout(function () {
         window.location.href = url;
       }, 650);
+
       return false;
     }
 
@@ -1189,7 +1207,18 @@
 
     centralAddEvent(window, 'pageshow', function () {
       var i;
+      centralResetDownloads();
       for (i = 0; i < centralServers.length; i++) centralCloseServer(centralServers[i]);
+    });
+
+    /* Se o navegador voltar o foco para a página depois de iniciar um download,
+       garante que o indicador também seja limpo. */
+    centralAddEvent(window, 'focus', function () {
+      centralResetDownloads();
+    });
+
+    centralAddEvent(document, 'visibilitychange', function () {
+      if (!document.hidden) centralResetDownloads();
     });
   </script>
 </body>
