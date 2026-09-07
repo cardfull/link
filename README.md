@@ -433,6 +433,64 @@
       box-shadow: 0 0 0 8px rgba(72, 131, 255, .18), 0 0 34px rgba(115, 78, 255, .55) !important;
     }
 
+
+    /* Super Loja: destaque compacto e discreto, antes do título principal. */
+    .store-entry {
+      width: min(520px, 100%);
+      margin: 0 0 8px;
+    }
+
+    .store-entry .server-toggle {
+      min-height: 68px;
+      padding: 10px 14px;
+      border-radius: inherit;
+      background: linear-gradient(100deg, rgba(60, 35, 150, .92), rgba(24, 70, 142, .92));
+    }
+
+    .store-entry .server-toggle:hover {
+      background: linear-gradient(100deg, rgba(72, 43, 174, .96), rgba(29, 82, 164, .96));
+    }
+
+    .store-entry.open .server-toggle,
+    .store-entry.open .server-toggle:hover {
+      background: linear-gradient(100deg, rgba(76, 44, 176, .98), rgba(31, 90, 183, .98));
+    }
+
+    .store-entry .server-number {
+      width: 48px;
+      height: 48px;
+      flex-basis: 48px;
+    }
+
+    .store-entry .server-number svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .store-entry .server-title {
+      font-size: 1.18rem;
+    }
+
+    .store-entry .server-content {
+      padding: 10px;
+    }
+
+    .store-entry .apps-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .store-entry .app-card {
+      min-height: 0;
+    }
+
+    .store-badge {
+      color: var(--green);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      margin-bottom: 6px;
+    }
+
     @media (max-width: 760px) {
       .shell {
         width: min(100% - 20px, 680px);
@@ -517,6 +575,46 @@
 </head>
 <body>
   <main class="shell">
+
+    <!-- SUPER LOJA - bloco compacto fora da lista principal, mas no mesmo acordeão -->
+    <article class="server store-entry" data-server="store">
+      <button class="server-toggle focusable" type="button" onclick="return centralToggleServer(this);" aria-expanded="false" aria-controls="server-store-content">
+        <span class="server-number" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="6" height="6" rx="1.2"/><rect x="14" y="4" width="6" height="6" rx="1.2"/>
+            <rect x="4" y="14" width="6" height="6" rx="1.2"/><rect x="14" y="14" width="6" height="6" rx="1.2"/>
+          </svg>
+        </span>
+        <span class="server-title">Super Loja</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </button>
+      <div class="server-content" id="server-store-content">
+        <div class="apps-grid">
+          <article class="app-card">
+            <div class="app-icon indigo" aria-hidden="true">SL<small>APPS</small></div>
+            <div class="app-info">
+              <div class="store-badge">LOJA DE APLICATIVOS</div>
+              <h2 class="app-title">Super Loja para Android</h2>
+              <p class="app-desc">Instale uma vez e acesse esta Central de Downloads diretamente pelo aplicativo.</p>
+              <div class="meta-row">
+                <span class="platform">Android</span>
+                <span class="platform">Versão 1.0.0</span>
+                <span class="platform">Downloader: definir após publicar</span>
+              </div>
+              <a class="download-button focusable" href="https://super.infopocos.com.br/r/473c6b76ab0274514e60" data-download>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+                Baixar Super Loja para Android
+              </a>
+              <div class="download-state" aria-live="polite">
+                <div class="download-status"><span>Preparando download...</span><span>aguarde</span></div>
+                <div class="progress-track"><div class="progress-bar"></div></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </article>
+
     <header class="hero">
       <div class="hero-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -723,9 +821,9 @@
             <article class="app-card">
               <div class="app-icon teal" aria-hidden="true">CP<small>LITE</small></div>
               <div class="app-info">
-                <h2 class="app-title"><span class="app-code">4-1</span> CPlayer Lite</h2>
-                <div class="meta-row"><span class="platform">Android</span><button class="downloader-copy focusable" type="button" data-copy="6199512">Downloader: <strong>6199512</strong></button></div>
-                <a class="download-button focusable" href="https://drive.google.com/uc?export=download&id=1gZjk7gT2SbjAj_O8Tk1FWKwKVgzzY4uN" data-download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>Baixar aplicativo</a>
+                <h2 class="app-title"><span class="app-code">4-1</span> Smarters Pro para Android</h2>
+                <div class="meta-row"><span class="platform">Android</span><button class="downloader-copy focusable" type="button" data-copy="8943618">Downloader: <strong>8943618</strong></button></div>
+                <a class="download-button focusable" href="https://drive.google.com/uc?export=download&id=1Midxxpti1y1m4LrKnuV7bSKjqozBPX3Q" data-download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>Baixar aplicativo</a>
                 <div class="download-state" aria-live="polite"><div class="download-status"><span>Preparando download...</span><span>aguarde</span></div><div class="progress-track"><div class="progress-bar"></div></div></div>
               </div>
             </article>
